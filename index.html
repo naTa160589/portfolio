@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Natalia Tereshchenko Portfolio</title>
+  
+  <!-- React + ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+  <!-- Babel для JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Шрифт -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-black text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const portfolioData = {
+      hero: {
+        title: "Natalia",
+        videoUrl: "", // можна вставити свій mp4 файл або залишити пустим
+        description: "Junior AI Specialist | Prompt Engineer | Digital Content Creator"
+      },
+      featuredProjects: [
+        {
+          id: "ai-images",
+          title: "AI Image Creation",
+          description: "Created 50+ AI-generated images for Instagram and Threads.",
+          posterUrl: "https://placehold.co/200x300", // заміни на своє
+          details: "Produced visuals with MidJourney and OpenArt.ai."
+        }
+      ],
+      contact: [
+        {
+          id: "email",
+          title: "Email",
+          description: "nata160589@gmail.com",
+          link: "mailto:nata160589@gmail.com"
+        },
+        {
+          id: "telegram",
+          title: "Telegram",
+          description: "@NaTa30LiA",
+          link: "https://t.me/NaTa30LiA"
+        },
+        {
+          id: "github",
+          title: "GitHub",
+          description: "Мій репозиторій з проектами",
+          link: "https://github.com/naTa160589/natalia-tereshchenko-portfolio"
+        }
+      ]
+    };
+
+    const Poster = ({ item, onClick }) => (
+      <div
+        className="relative w-48 h-72 mx-2 cursor-pointer transform hover:scale-105 transition-transform duration-300"
+        onClick={() => onClick(item)}
+      >
+        <img src={item.posterUrl} alt={item.title} className="w-full h-full object-cover rounded-lg border-2 border-cyan-400" />
+        <div className="absolute bottom-0 w-full bg-black bg-opacity-70 text-cyan-400 text-center py-2 font-['Orbitron'] text-sm">
+          {item.title}
+        </div>
+      </div>
+    );
+
+    const ProjectPopup = ({ item, onClose }) => (
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <div className="bg-gray-900 p-6 rounded-lg w-11/12 md:w-1/2 text-white relative">
+          <button onClick={onClose} className="absolute top-4 right-4 text-2xl text-cyan-400">×</button>
+          <h2 className="text-2xl font-['Orbitron'] text-cyan-400 mb-4">{item.title}</h2>
+          <p className="mb-4 text-gray-300">{item.description}</p>
+          {item.details && <p className="mb-4 text-gray-400">{item.details}</p>}
+          {item.link && (
+            <a href={item.link} className="text-cyan-400 underline font-bold" target="_blank" rel="noopener noreferrer">
+              Visit
+            </a>
+          )}
+        </div>
+      </div>
+    );
+
+    const Portfolio = () => {
+      const [selectedItem, setSelectedItem] = useState(null);
+      const [data] = useState(portfolioData);
+
+      return (
+        <div>
+          {/* Hero */}
+          <div className="h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+            <div className="text-center">
+              <h1 className="text-5xl md:text-7xl font-['Orbitron'] text-cyan-400 drop-shadow-lg">
+                {data.hero.title}
+              </h1>
+              <p className="text-xl md:text-2xl mt-4 text-gray-300">{data.hero.description}</p>
+            </div>
+          </div>
+
+          {/* Featured */}
+          <div className="py-8 px-4">
+            <h2 className="text-3xl font-['Orbitron'] text-cyan-400 mb-4">Featured Projects</h2>
+            <div className="flex overflow-x-auto pb-4">
+              {data.featuredProjects.map(item => (
+                <Poster key={item.id} item={item} onClick={setSelectedItem} />
+              ))}
+            </div>
+          </div>
+
+          {/* Contacts */}
+          <div className="py-8 px-4 bg-gray-900">
+            <h2 className="text-3xl font-['Orbitron'] text-cyan-400 mb-4">Contact Me</h2>
+            <div className="flex overflow-x-auto pb-4">
+              {data.contact.map(item => (
+                <Poster key={item.id} item={item} onClick={setSelectedItem} />
+              ))}
+            </div>
+          </div>
+
+          {/* Popup */}
+          {selectedItem && <ProjectPopup item={selectedItem} onClose={() => setSelectedItem(null)} />}
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<Portfolio />);
+  </script>
+</body>
+</html>
